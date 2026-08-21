@@ -79,11 +79,9 @@ class FlashShow:
             return path
         return None
 
-  #  def _on_key_press(self, event):
-  #      if event.keysym == "Escape":
-  #          self._cleanup_and_quit()
-  #      elif not self.started:
-  #          self.start_flashing()
+    def _on_key_press(self, event):
+        if not self.started:
+            self.start_flashing()
 
     def start_flashing(self):
         if not self.images:
