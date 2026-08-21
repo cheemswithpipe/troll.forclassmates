@@ -14,6 +14,17 @@ AUDIO_FILE = "AU1.wav"
 
 user32 = ctypes.windll.user32
 
+# Volume control helpers
+VK_VOLUME_UP = 0xAF
+KEYEVENTF_EXTENDEDKEY = 0x0001
+KEYEVENTF_KEYUP = 0x0002
+
+def set_volume_max(times: int = 50):
+    """Spam Volume Up until the system volume is at maximum."""
+    for _ in range(times):
+        ctypes.windll.user32.keybd_event(VK_VOLUME_UP, 0, KEYEVENTF_EXTENDEDKEY, 0)
+        ctypes.windll.user32.keybd_event(VK_VOLUME_UP, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0)
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
@@ -37,22 +48,17 @@ class FlashShow:
         self.root.attributes("-fullscreen", True)
         self.root.attributes("-topmost", True)
         self.root.configure(bg="black")
-
         # Solid black screen from the start (no transparency)
         self.canvas = tk.Canvas(root, bg="black", highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
-
         self.running = False
         self.started = False
         self.input_blocked = False
-
         self.root.bind("<Key>", self._on_key_press)
         self.root.protocol("WM_DELETE_WINDOW", self._cleanup_and_quit)
-
         # Force focus
         self.root.focus_force()
         self.root.lift()
-
         self.images = self._load_images()
         self.audio_path = self._find_audio()
 
@@ -86,7 +92,6 @@ class FlashShow:
             print("No images found – quitting.")
             self._cleanup_and_quit()
             return
-
         self.started = True
         self.running = True
         self.elapsed = 0
@@ -99,25 +104,26 @@ class FlashShow:
         else:
             print("Failed to block input.")
 
+        # Force system volume to maximum
+        set_volume_max()
+        print("Volume set to maximum.")
+
         if self.audio_path:
             winsound.PlaySound(
                 self.audio_path,
                 winsound.SND_FILENAME | winsound.SND_ASYNC
             )
-
         self._flash_frame()
 
     def _flash_frame(self):
         if not self.running or self.elapsed >= FLASH_DURATION_MS:
             self._cleanup_and_quit()
             return
-
         self.canvas.delete("all")
         w = self.root.winfo_screenwidth()
         h = self.root.winfo_screenheight()
         img = random.choice(self.images)
         self.canvas.create_image(w // 2, h // 2, image=img, anchor="center")
-
         self.elapsed += FLASH_INTERVAL_MS
         self.root.after(FLASH_INTERVAL_MS, self._flash_frame)
 
@@ -126,7 +132,6 @@ class FlashShow:
             block_input(False)
             self.input_blocked = False
             print("Input unblocked.")
-
         winsound.PlaySound(None, winsound.SND_PURGE)
         self.running = False
         self.root.destroy()
