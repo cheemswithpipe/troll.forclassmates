@@ -6,7 +6,7 @@ import ctypes
 import sys
 
 # --- Configuration ---
-FLASH_DURATION_MS = 50000
+FLASH_DURATION_MS = 500000
 FLASH_INTERVAL_MS = 300
 IMAGE_FILES = ["EA1.png", "EA3.png", "EA4.png", "EA5.png"]
 AUDIO_FILE = "AU1.wav"
