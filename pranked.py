@@ -8,7 +8,7 @@ import sys
 # --- Configuration ---
 FLASH_DURATION_MS = 5000
 FLASH_INTERVAL_MS = 300
-IMAGE_FILES = ["EA1.png", "EA2.png", "EA3.png", "EA4.png", "EA5.png"]
+IMAGE_FILES = ["EA1.png", "EA3.png", "EA4.png", "EA5.png"]
 AUDIO_FILE = "AU1.wav"
 # ----------------------
 
@@ -79,11 +79,11 @@ class FlashShow:
             return path
         return None
 
-    def _on_key_press(self, event):
-        if event.keysym == "Escape":
-            self._cleanup_and_quit()
-        elif not self.started:
-            self.start_flashing()
+  #  def _on_key_press(self, event):
+  #      if event.keysym == "Escape":
+  #          self._cleanup_and_quit()
+  #      elif not self.started:
+  #          self.start_flashing()
 
     def start_flashing(self):
         if not self.images:
