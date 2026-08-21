@@ -134,6 +134,7 @@ class FlashShow:
             block_input(False)
             self.input_blocked = False
             print("Input unblocked.")
+
         winsound.PlaySound(None, winsound.SND_PURGE)
         self.running = False
         self.root.destroy()
