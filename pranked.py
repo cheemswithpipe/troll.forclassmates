@@ -38,9 +38,7 @@ class FlashShow:
         self.root.attributes("-topmost", True)
         self.root.configure(bg="black")
 
-        # Make the window invisible (desktop shows through)
-        self.root.attributes("-transparentcolor", "black")
-
+        # Solid black screen from the start (no transparency)
         self.canvas = tk.Canvas(root, bg="black", highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
@@ -51,7 +49,7 @@ class FlashShow:
         self.root.bind("<Key>", self._on_key_press)
         self.root.protocol("WM_DELETE_WINDOW", self._cleanup_and_quit)
 
-        # Force focus so key presses are captured even though the window is invisible
+        # Force focus
         self.root.focus_force()
         self.root.lift()
 
@@ -90,12 +88,6 @@ class FlashShow:
             return
 
         self.started = True
-
-        # Make the window visible again (remove transparency)
-        self.root.attributes("-transparentcolor", "")
-        self.canvas.configure(bg="black")
-        self.canvas.delete("all")
-
         self.running = True
         self.elapsed = 0
 
@@ -103,7 +95,7 @@ class FlashShow:
         success = block_input(True)
         self.input_blocked = success
         if success:
-            print("Input blocked for 5 seconds.")
+            print("Input blocked.")
         else:
             print("Failed to block input.")
 
